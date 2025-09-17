@@ -1,0 +1,349 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+}
+
+h1 {
+  margin: 0 0 12px;
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+}
+
+.card h3 {
+  margin: 0 0 6px;
+}
+
+.card p {
+  margin: 2px 0;
+  color: #444;
+}
+
+#modal.hidden {
+  display: none;
+}
+
+#modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .4);
+  display: grid;
+  place-items: center;
+  z-index: 9998;
+}
+
+.modal-card {
+  background: #fff;
+  max-width: 520px;
+  width: 92%;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+.close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  float: right;
+  cursor: pointer;
+}
+
+/* container centralizado + tipografia fluida */
+.page {
+  max-width: 1120px;
+  /* desktop padrão */
+  margin: 0 auto;
+  padding: 16px;
+}
+
+html {
+  font-size: clamp(14px, 1.2vw + 10px, 18px);
+}
+
+/* grid do FORM: 3 colunas em desktop, 2 no tablet, 1 no mobile */
+form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+form button {
+  grid-column: 1 / -1;
+}
+
+/* botão ocupa a linha inteira */
+
+/* grid dos CARDS: ajusta sozinho conforme a tela */
+#cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+/* cartões com toque sutil para mobile e TV */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+
+/* BREAKPOINTS */
+@media (max-width: 900px) {
+
+  /* tablets */
+  .page {
+    padding: 12px;
+  }
+
+  form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+
+  /* celulares */
+  .page {
+    padding: 10px;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1600px) {
+
+  /* TVs / telas muito largas */
+  .page {
+    max-width: 1360px;
+  }
+
+  /* amplia um pouco o container */
+  #cards {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+/* --- FLIP 3D ESTÁVEL (bloco único) --- */
+.card {
+  border-radius: 14px;
+}
+
+/* mantém o mesmo raio dos cartões normais */
+
+.card.flip {
+  position: relative;
+  perspective: 1000px;
+  padding: 0;
+  /* não empurra o conteúdo interno */
+  min-height: 220px;
+  /* altura visível do cartão */
+}
+
+.card.flip .flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .6s;
+  border-radius: 14px;
+  overflow: hidden;
+  will-change: transform;
+  /* suaviza a animação */
+}
+
+/* cada face ocupa todo o cartão e oculta sua “costas” */
+.card.flip .face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* frente “plana” */
+.card.flip .flip-front {
+  transform: rotateY(0deg);
+  background: linear-gradient(135deg, #f7f7f7, #ffffff);
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+/* verso virado 180° (aparece quando o container gira) */
+.card.flip .flip-back {
+  transform: rotateY(180deg);
+  background: #fff;
+  overflow: auto;
+  /* se o conteúdo for alto */
+}
+
+/* alinhamento dos botões no verso */
+.card.flip .row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.card.flip .row button {
+  flex: 1;
+}
+
+/* ------- FLIP: girar as faces, não o contêiner ------- */
+.card.flip {
+  position: relative;
+  perspective: 1000px;
+  padding: 0;
+  min-height: 220px;
+}
+
+.card.flip .flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* faces ocupam todo o card e escondem a “costas” */
+.card.flip .face {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* frente e verso com seus próprios transforms e transições */
+.card.flip .flip-front,
+.card.flip .flip-back {
+  transition: transform .6s;
+}
+
+/* frente “plana” e verso a 180º */
+.card.flip .flip-front {
+  transform: rotateY(0deg);
+  background: linear-gradient(135deg, #f7f7f7, #ffffff);
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.card.flip .flip-back {
+  transform: rotateY(180deg);
+  background: #fff;
+  overflow: auto;
+}
+
+/* quando virar: frente vai para 180º (some), verso vai para 360º (aparece) */
+.card.flip:hover .flip-front,
+.card.flip.is-flipped .flip-front {
+  transform: rotateY(180deg);
+}
+
+.card.flip:hover .flip-back,
+.card.flip.is-flipped .flip-back {
+  transform: rotateY(360deg);
+}
+
+/* Banner superior responsivo */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(160px, 28vw, 320px);
+  /* móvel → desktop grande/TV */
+  background-image: url('banner.png');
+  /* troque por URL se preferir */
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* leve degrade para dar contraste ao texto */
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .45), rgba(0, 0, 0, .15) 40%, rgba(0, 0, 0, 0));
+}
+
+.hero-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: end;
+  padding: 16px;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .4);
+}
+
+.hero-text h1 {
+  margin: 0;
+  font-size: clamp(22px, 3.6vw, 40px);
+}
+
+.hero-text span {
+  font-size: clamp(12px, 1.2vw, 16px);
+  opacity: .9;
+  margin-bottom: 4px;
+}
+
+/* Jumbotron do cadastro */
+.jumbotron {
+  background: #fff;
+  border: 1px solid #e9e9e9;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .06);
+  margin: 16px 0 20px;
+}
+
+.jumbotron h2 {
+  margin: 0 0 12px;
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 700;
+  text-align: center;
+  color: #222;
+}
+
+/* dá um pouco mais de “respiro” entre os campos dentro do box */
+.jumbotron form {
+  gap: 12px;
+}
+
+/* em telas pequenas, mantém 1–2 colunas como você já configurou */
+@media (max-width: 900px) {
+  .jumbotron {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .jumbotron {
+    padding: 14px;
+  }
+}
