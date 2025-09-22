@@ -99,7 +99,7 @@ form button {
   gap: 12px;
 }
 
-/* cartões com toque sutil para mobile e TV */
+/* Mobile e TV */
 .card {
   background: #fff;
   border-radius: 14px;
@@ -346,4 +346,5 @@ form button {
   .jumbotron {
     padding: 14px;
   }
+
 }
