@@ -1,9 +1,9 @@
 # Front — Cadastro de Cães do Condomínio (SPA)
 
 Aplicação de página única (HTML/CSS/JS puro) para cadastrar cachorros de um condomínio e exibi-los em **cards com efeito flip**.  
-Integra com a **API Flask** (back-end) via `fetch`. Abre direto pelo arquivo `index.html` (sem build, sem Node).
+Integra com a **API Flask** (back-end) via `fetch`. Abre direto pelo arquivo `index.html`.
 
-## 👀 Principais recursos
+## Principais recursos
 - **Formulário “Cadastre seu Pet”** (dono + cachorro)
 - **Lista em cards** com **efeito flip 3D** (frente: nome do cão | verso: dados + botões)
 - **Detalhes** em **modal** (usa `GET /cachorros/{id}`)
@@ -14,14 +14,14 @@ Integra com a **API Flask** (back-end) via `fetch`. Abre direto pelo arquivo `in
 
 ---
 
-## 🧩 Pré-requisitos
+## Pré-requisitos
 - Navegador moderno (Chrome/Edge/Firefox/Safari).
 - API rodando em `http://127.0.0.1:5000` (ou ajuste a constante `API` no `script.js`).
 - CORS habilitado no back (já previsto no projeto).
 
 ---
 
-## 🚀 Como executar (passo a passo)
+## Como executar (passo a passo)
 1. **Suba a API** (back-end):  
    Abra o terminal na pasta do back e rode `python app.py`.  
    Teste em `http://127.0.0.1:5000/status` (deve retornar `{ ok: true, ... }`).
@@ -39,7 +39,9 @@ Integra com a **API Flask** (back-end) via `fetch`. Abre direto pelo arquivo `in
 ```js
 const API = 'http://127.0.0.1:5000';
 
-⚙️ Configurações & Personalização
+---
+
+## Configurações & Personalização
 URL da API
 
 Arquivo: script.js → constante API.
@@ -74,8 +76,9 @@ Estrutura do card (gerada no JS) segue:
 
 Regras do flip estão no final do style.css (bloco “FLIP 3D”).
 O verso aparece no hover (desktop) ou ao tocar (mobile, via classe .is-flipped).
+---
 
-🔗 Rotas da API usadas
+## Rotas da API usadas
 
 POST /cachorros – cria registro (form envia JSON aninhado):
 
@@ -95,7 +98,9 @@ DELETE /cachorros/{id} – excluir.
 
 A API também possui GET /donos (lista de donos com quantidade_cachorros) — não é consumida nesta página, mas pode ser usada em uma futura seção “Donos”.
 
-🧪 Como a banca/professor pode testar rapidamente
+---
+
+## Como testar rapidamente
 
 Abrir http://127.0.0.1:5000/apidocs (Swagger) e validar POST/GET/DELETE.
 
@@ -111,7 +116,9 @@ Deletar remove e atualiza.
 
 Redimensionar a janela (mobile → desktop → TV) para ver a responsividade.
 
-🩺 Solução de problemas (FAQ rápido)
+---
+
+## Solução de problemas (FAQ rápido)
 
 “Os cards não aparecem”
 
@@ -138,7 +145,8 @@ Confirme a existência de banner.png na mesma pasta do index.html.
 
 Se usar outra imagem, ajuste a URL no style.css.
 
-♿ Acessibilidade e UX
+
+## Acessibilidade e UX
 
 Banner com role="img" + aria-label.
 
@@ -147,13 +155,3 @@ Toasts com aria-live="polite".
 Modal fecha com Esc e pelo botão ×.
 
 Campos com placeholder e validações de entrada.
-
-📌 Roadmap (ideias futuras)
-
-Edição (PUT /cachorros/{id}) no próprio modal.
-
-Busca/filtragem por nome/raça no topo da lista.
-
-Seção “Donos” usando GET /donos.
-
-“Estado vazio” e “Carregando…” nos cards.
