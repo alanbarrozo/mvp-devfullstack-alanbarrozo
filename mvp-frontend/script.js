@@ -23,7 +23,7 @@ function closeModal() {
   if (modal) modal.classList.add('hidden');
 }
 
-/* ---------- Renderização de lista ---------- */
+/* ---------- Lista ---------- */
 async function carregar(q = "") {
   const url = q ? `${API}/cachorros?q=${encodeURIComponent(q)}` : `${API}/cachorros`;
   let dados = [];
@@ -200,3 +200,4 @@ document.addEventListener('DOMContentLoaded', () => {
     carregar();
   });
 });
+
