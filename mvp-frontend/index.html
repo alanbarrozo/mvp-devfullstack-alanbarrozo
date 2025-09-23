@@ -35,7 +35,8 @@
         <input id="raca" placeholder="Raça" required>
         <input id="idade" type="number" min="0" placeholder="Idade" required>
 
-        <!-- Imagem opcional -->
+        <!-- ✅ NOVO: imagem opcional -->
+        <label for="foto" class="upload-title">Faça upload da foto do seu Pet</label>
         <input id="foto" type="file" accept="image/png,image/jpeg,image/webp">
 
         <button>Cadastrar</button>
@@ -44,19 +45,53 @@
 
     <div id="cards"></div>
   </div>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=5" defer></script>
 
 
+  <!-- Modal de detalhes -->
   <!-- Modal de detalhes -->
   <div id="modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-card">
       <button id="fecharModal" class="close" aria-label="Fechar">×</button>
       <h2 id="modalTitle">Detalhes do cadastro</h2>
+
+      <!-- Conteúdo de leitura -->
       <div id="modalContent">Carregando...</div>
+
+      <!-- FORM DE EDIÇÃO (agora dentro do modal) -->
+      <form id="formEditar" class="hidden" style="margin-top:12px">
+        <fieldset>
+          <legend>Cão</legend>
+          <label>Nome</label>
+          <input id="edNomeCao" required>
+          <label>Raça</label>
+          <input id="edRaca" required>
+          <label>Idade</label>
+          <input id="edIdade" type="number" min="0" required>
+        </fieldset>
+
+        <fieldset>
+          <legend>Dono (preencher os 3 para atualizar)</legend>
+          <label>Nome completo</label>
+          <input id="edNomeDono">
+          <label>Bloco</label>
+          <input id="edBloco">
+          <label>Apartamento</label>
+          <input id="edApto">
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit">Salvar</button>
+          <button type="button" id="cancelarEdicao">Cancelar</button>
+        </div>
+
+        <input type="hidden" id="edId">
+      </form>
     </div>
   </div>
 
-</body>
 
+
+</body>
 
 </html>
