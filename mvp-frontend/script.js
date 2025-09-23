@@ -23,7 +23,7 @@ function closeModal() {
   if (modal) modal.classList.add('hidden');
 }
 
-/* ---------- Lista ---------- */
+/* ---------- Renderização de lista ---------- */
 async function carregar(q = "") {
   const url = q ? `${API}/cachorros?q=${encodeURIComponent(q)}` : `${API}/cachorros`;
   let dados = [];
@@ -67,8 +67,34 @@ async function carregar(q = "") {
           <p><strong>Idade:</strong> ${c.idade}</p>
           ${c.created_at_br ? `<p style="color:#666"><small>desde: ${c.created_at_br}</small></p>` : ""}
           <div class="row">
-            <button data-acao="detalhes" data-id="${c.id}">Detalhes</button>
-            <button data-acao="excluir" data-id="${c.id}">Deletar</button>
+            <button class="btn-text"
+                    data-acao="detalhes"
+                    data-id="${c.id}"
+                    title="Ver detalhes">Detalhes</button>
+
+            <button class="btn-icon"
+                    data-acao="editar"
+                    data-id="${c.id}"
+                    aria-label="Editar"
+                    title="Editar"
+                    data-tooltip="Editar">
+              <!-- ícone lápis -->
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.41L18.37 3.29a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+              </svg>
+            </button>
+
+            <button class="btn-icon danger"
+                    data-acao="excluir"
+                    data-id="${c.id}"
+                    aria-label="Excluir"
+                    title="Excluir"
+                    data-tooltip="Excluir">
+              <!-- ícone lixeira -->
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M6 7h12l-1 14H7L6 7zm3-3h6l1 2H8l1-2zM5 7h14v2H5z" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -109,6 +135,8 @@ async function verDetalhes(id) {
   const res = await fetch(`${API}/cachorros/${id}`);
   const c = await res.json();
 
+  modalTitle.textContent = `Pet Cadastrado #${id}`;
+
   const html = `
     <p><strong>Cão:</strong> ${c.nome_cachorro} (${c.raca})</p>
     <p><strong>Idade:</strong> ${c.idade}</p>
@@ -119,6 +147,8 @@ async function verDetalhes(id) {
   `;
 
   document.querySelector("#modalContent").innerHTML = html;
+  modalContent.classList.remove('hidden');
+  formEditar.classList.add('hidden');
   document.querySelector('#modal').classList.remove('hidden');
 }
 
@@ -201,3 +231,105 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ---------- EDIÇÃO (abrir modal, preencher, PUT, atualizar) ----------
+const modalEl = document.querySelector('#modal');
+const modalTitle = document.querySelector('#modalTitle');
+const modalContent = document.querySelector('#modalContent');
+const formEditar = document.querySelector('#formEditar');
+
+function abrirModal() { modalEl?.classList.remove('hidden'); }
+function fecharModal2() { modalEl?.classList.add('hidden'); } // evita conflito de nomes
+
+document.querySelector('#cancelarEdicao')?.addEventListener('click', () => {
+  formEditar.classList.add('hidden');
+  modalContent.classList.remove('hidden');
+  fecharModal2();
+});
+
+// Captura cliques no botão "Editar"
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-acao="editar"]');
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  try {
+    // 1) Busca dados atuais do cachorro (preencher o form)
+    const res = await fetch(`${API}/cachorros/${id}`);
+    if (!res.ok) throw new Error(`GET /cachorros/${id} -> ${res.status}`);
+    const c = await res.json();
+
+    // 2) Prepara o modal em modo edição
+    modalTitle.textContent = `Pet Cadastrado #${id}`;
+    modalContent.classList.add('hidden');
+    formEditar.classList.remove('hidden');
+
+    // 3) Preenche o form
+    document.querySelector('#edId').value = id;
+    document.querySelector('#edNomeCao').value = c.nome_cachorro ?? '';
+    document.querySelector('#edRaca').value = c.raca ?? '';
+    document.querySelector('#edIdade').value = c.idade ?? 0;
+
+    document.querySelector('#edNomeDono').value = c.nome_completo ?? '';
+    document.querySelector('#edBloco').value = c.bloco ?? '';
+    document.querySelector('#edApto').value = c.apartamento ?? '';
+
+    // 4) Abre o modal
+    abrirModal();
+  } catch (err) {
+    console.error(err);
+    showToast('Falha ao abrir edição. Veja o console (F12).', 'err');
+  }
+});
+
+// Submit do form de edição -> PUT /cachorros/:id
+formEditar?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const id = document.querySelector('#edId').value;
+  const nomeCao = document.querySelector('#edNomeCao').value.trim();
+  const raca = document.querySelector('#edRaca').value.trim();
+  const idade = document.querySelector('#edIdade').value;
+
+  const nomeDono = document.querySelector('#edNomeDono').value.trim();
+  const bloco = document.querySelector('#edBloco').value.trim();
+  const apto = document.querySelector('#edApto').value.trim();
+
+  // Monta payload conforme a API (PUT aceita JSON)
+  const payload = {
+    nome_cachorro: nomeCao,
+    raca,
+    idade: Number(idade)
+  };
+
+  // Regra do backend: só atualiza DONO se vierem os 3 campos juntos
+  if (nomeDono || bloco || apto) {
+    if (!nomeDono || !bloco || !apto) {
+      showToast('Para atualizar o Dono, preencha Nome, Bloco e Apartamento.', 'err');
+      return;
+    }
+    payload.dono = { nome_completo: nomeDono, bloco, apartamento: apto };
+  }
+
+  try {
+    const res = await fetch(`${API}/cachorros/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const ejson = await res.json().catch(() => ({ erro: 'Erro' }));
+      throw new Error(ejson.erro || `PUT falhou (${res.status})`);
+    }
+
+    showToast('Atualizado com sucesso!');
+    // Fecha o modal e recarrega a lista para refletir as mudanças
+    formEditar.classList.add('hidden');
+    modalContent.classList.remove('hidden');
+    fecharModal2();
+    carregar();
+  } catch (err) {
+    console.error(err);
+    showToast(String(err.message || err), 'err');
+  }
+});
